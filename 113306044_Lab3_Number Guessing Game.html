@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+	<div id="pagetitle">
+	<h1>113306044_Lab3_Number Guessing Game</h1>
+	</div>
+
+<div id="result"></div>
+<div id="feedback"></div>
+
+<script>
+    // 隨機生成 1 到 100 之間的目標數字
+    const secretNumber = Math.floor(Math.random() * 100) + 1;
+    let attempts = 7;  // 初始猜測次數為 7 次
+    let guessedCorrectly = false;
+    let max = 100
+    let min = 1
+
+    function updateResult(message) {
+            document.getElementById('result').innerHTML = message;
+        }
+
+
+    // 進行遊戲的函數
+    function startGame() {
+        while (attempts > 0 && !guessedCorrectly) {
+            // 提示用戶猜測數字範圍和剩餘次數
+            let userGuess = window.prompt(`請猜一個 ${min} ~ ${max} 之間的數字。剩餘次數: ${attempts}\n(若您要退出遊戲，請點擊取消)`);
+
+            // 檢查用戶是否取消（即輸入為 null），若是則結束遊戲
+            if (userGuess === null) {
+                alert("遊戲結束！");
+                break;
+            }
+
+            // 轉換為數字並檢查是否為有效數字
+            userGuess = parseInt(userGuess);
+            
+            // 檢查是否為空值或非數字，並且範圍是否正確
+            if (isNaN(userGuess) || userGuess <= min || userGuess >= max) {
+                alert("請輸入有效範圍內的數字(不能選擇範圍的上下限)");
+                continue;  // 若輸入無效，則跳過本輪
+            }
+
+            // 檢查猜測是否正確
+            if (userGuess < secretNumber) {
+                attempts--;
+                updateResult(`請猜 ${userGuess} ~ ${max} 之間的數字。剩餘次數: ${attempts}`);
+                min=userGuess;
+            } else if (userGuess > secretNumber) {
+                attempts--;
+                updateResult(`請猜 ${min} ~ ${userGuess} 之間的數字。剩餘次數: ${attempts}`);
+                max=userGuess;
+            } else {
+                guessedCorrectly = true;
+                updateResult(`恭喜！你猜對了！正確數字是 ${secretNumber}，你用了 ${7 - attempts} 次。`);
+                document.getElementById('feedback').innerHTML = '<img src="correct.jpg" alt="猜對了！">';
+                break;  // 猜對後結束遊戲
+            }
+
+            // 檢查是否還有剩餘次數
+            if (attempts === 0) {
+                updateResult(`遊戲結束！正確答案是 ${secretNumber}。`);
+                document.getElementById('feedback').innerHTML = '<img src="wrong.jpg" alt="遊戲結束">';
+            }
+        }
+    }
+
+    // 開始遊戲
+    startGame();
+</script>
+
+</body>
+</html>
